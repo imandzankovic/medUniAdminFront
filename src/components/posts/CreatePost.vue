@@ -16,6 +16,7 @@
               <label>Title:</label>
               <input
                 type="text"
+                ref="title"
                 v-model="post.title"
                 v-validate="'required'"
                 id="title"
@@ -35,7 +36,11 @@
             </div>
             <div class="form-group">
               <label>Video:</label>
-              <input type="text" class="form-control" v-model="post.video">
+              <input type="file" name="file" ref="file" value v-on:change="handleFileUpload()">
+              <!-- <input type="text" class="form-control" v-model="post.video"> -->
+              <div class="container">
+                <vue-progress-bar></vue-progress-bar>
+              </div>
             </div>
             <div class="form-group">
               <textarea
@@ -110,6 +115,7 @@
 </template>
 <script>
 import { Validator } from "simple-vue-validator";
+import { async } from 'q';
 export default {
   components: {
     name: "createPost"
@@ -120,6 +126,9 @@ export default {
       author: {},
       authors: [],
       selected: null,
+      file: "",
+      title: "",
+      msg:'',
       submitted: false
     };
   },
@@ -127,6 +136,13 @@ export default {
     this.getAuthors();
   },
   methods: {
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0];
+      this.$Progress.start();
+      alert("Wait until upload is done!");
+      //this.file=document.getElementsByName('file').value;
+      console.log(this.file);
+    },
     createPost() {
       let uri = "http://localhost:3000/api/posts";
       this.axios.post(uri, this.post).then(response => {
@@ -139,14 +155,41 @@ export default {
         this.authors = response.data;
       });
     },
-    handleSubmit(e) {
+     sendToYoutube() {
+      let uri = "http://localhost:3000/yt";
+      this.axios.get(uri, this.msg).then(response => {
+        this.msg = response.data;
+      });
+    },
+      handleSubmit(e) {
       var val = document.getElementById("textarea").value;
       console.log("val jeeeee " + val);
+      let formData = new FormData();
+
+      /*
+                Add the form data we need to submit
+            */
+      formData.append("title", this.title);
+      formData.append("file", this.file);
+      console.log(formData);
+
+      /*
+          Make the request to the POST /single-file URL
+        */
+      this.axios
+        .post("http://localhost:3000/upload", formData)
+        .then(function() {
+          console.log("SUCCESS!!");
+        })
+        .catch(function() {
+          console.log("FAILURE!!");
+        });
       this.submitted = true;
       this.$validator.validate().then(valid => {
         if (!valid) {
           alert("Fill required fields - title and text!");
         } else {
+          this.sendToYoutube();
           this.createPost();
           https: this.$notification.show(
             "Post created",
