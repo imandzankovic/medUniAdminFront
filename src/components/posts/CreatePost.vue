@@ -157,10 +157,13 @@ export default {
       });
     },
     sendToYoutube() {
-      let uri = this.staza + "yt";
+      let uri = this.staza + "uploads";
       this.axios.get(uri, this.msg).then(response => {
         this.msg = response.data;
       });
+    setTimeout( () => this.$router.push({ path: '/admin'}), 5000);
+
+
     },
     handleSubmit(e) {
       var val = document.getElementById("textarea").value;
@@ -173,7 +176,7 @@ export default {
       console.log(formData);
 
       // Make the request to the POST /single-file URL
-      let uri = this.staza + "upload";
+      let uri = this.staza + "uploads";
       this.axios
         .post(uri, formData)
         .then(function() {
