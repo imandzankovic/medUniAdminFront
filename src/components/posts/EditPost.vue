@@ -95,9 +95,11 @@
 <script>
 export default {
   data() {
+    var end = require("../../../dev.env");
     return {
       post: {},
       authors: [],
+      staza: end.VUE_APP_BASE_URI
     };
   },
 
@@ -108,20 +110,20 @@ export default {
 
   methods: {
     getPost() {
-      let uri = "http://localhost:3000/api/posts/" + this.$route.params.id;
+      let uri = this.staza + "posts/" + this.$route.params.id;
       this.axios.get(uri).then(response => {
         this.post = response.data;
       });
     },
     getAuthors() {
-      let uri = "http://localhost:3000/api/authors";
+      let uri=this.staza + "authors";
       this.axios.get(uri, this.post).then(response => {
         this.authors = response.data;
       });
     },
 
     updatePost() {
-      let uri = "http://localhost:3000/api/posts/" + this.$route.params.id;
+      let uri = this.staza + "posts/" + this.$route.params.id;
       this.axios.put(uri, this.post).then(response => {
         this.$router.push({ name: "posts" });
       });

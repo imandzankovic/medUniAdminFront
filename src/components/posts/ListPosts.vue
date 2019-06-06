@@ -46,26 +46,28 @@
 </template>
 
 <script>
+import { constants } from "crypto";
 export default {
   data() {
+    var end = require("../../../dev.env");
     return {
-      posts: []
+      posts: [],
+      staza: end.VUE_APP_BASE_URI
     };
   },
-
   created: function() {
     this.fetchPosts();
   },
 
   methods: {
     fetchPosts() {
-      let uri = "http://localhost:3000/api/posts";
+      let uri = this.staza + "posts";
       this.axios.get(uri).then(response => {
         this.posts = response.data;
       });
     },
     deletePost(id, index) {
-      let uri = "http://localhost:3000/api/posts/" + id;
+      let uri = this.staza + "posts/" + id;
       this.axios.delete(uri).then(response => {
         this.posts.splice(index, 1);
       });

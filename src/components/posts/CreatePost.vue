@@ -115,12 +115,13 @@
 </template>
 <script>
 import { Validator } from "simple-vue-validator";
-import { async } from 'q';
+import { async } from "q";
 export default {
   components: {
     name: "createPost"
   },
   data() {
+    var end = require("../../../dev.env");
     return {
       post: {},
       author: {},
@@ -128,8 +129,9 @@ export default {
       selected: null,
       file: "",
       title: "",
-      msg:'',
-      submitted: false
+      msg: "",
+      submitted: false,
+      staza: end.VUE_APP_BASE_URI
     };
   },
   created: function() {
@@ -140,44 +142,40 @@ export default {
       this.file = this.$refs.file.files[0];
       this.$Progress.start();
       alert("Wait until upload is done!");
-      //this.file=document.getElementsByName('file').value;
       console.log(this.file);
     },
     createPost() {
-      let uri = "http://localhost:3000/api/posts";
+      let uri = this.staza + "posts";
       this.axios.post(uri, this.post).then(response => {
         console.log(response.data);
       });
     },
     getAuthors() {
-      let uri = "http://localhost:3000/api/authors";
+      let uri = this.staza + "authors";
       this.axios.get(uri, this.post).then(response => {
         this.authors = response.data;
       });
     },
-     sendToYoutube() {
-      let uri = "http://localhost:3000/yt";
+    sendToYoutube() {
+      let uri = this.staza + "yt";
       this.axios.get(uri, this.msg).then(response => {
         this.msg = response.data;
       });
     },
-      handleSubmit(e) {
+    handleSubmit(e) {
       var val = document.getElementById("textarea").value;
-      console.log("val jeeeee " + val);
       let formData = new FormData();
 
-      /*
-                Add the form data we need to submit
-            */
+      // Add the form data we need to submit
+
       formData.append("title", this.title);
       formData.append("file", this.file);
       console.log(formData);
 
-      /*
-          Make the request to the POST /single-file URL
-        */
+      // Make the request to the POST /single-file URL
+      let uri = this.staza + "upload";
       this.axios
-        .post("http://localhost:3000/upload", formData)
+        .post(uri, formData)
         .then(function() {
           console.log("SUCCESS!!");
         })

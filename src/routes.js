@@ -4,11 +4,10 @@ import EditPost from './components/posts/EditPost.vue';
 import ListPosts from './components/posts/ListPosts.vue';
 import Admin from './components/admin/Admin.vue';
 import Redirect from './components/Redirect.vue';
-import Video from './components/Video.vue';
+
 
 const routes = [
     { path: '/', component: Admin, name: 'admin' },
-    { path: '/video', component: Video, name: 'video' },
     { path: '/createPost', component: CreatePost, name: 'createPost' },
     { path: '/editPost', component: EditPost, name: 'editPost' },
     { path: '/login', component: Login, name: 'login' },
