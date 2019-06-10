@@ -32,7 +32,8 @@
 
             <div class="form-group">
               <label>Img:</label>
-              <input type="text" class="form-control" v-model="post.img">
+              <!-- <input type="text" class="form-control" v-model="post.img"> -->
+              <input type="file" name="upfile" ref="upfile" value v-on:change="handleImgUpload()">
             </div>
             <div class="form-group">
               <label>Video:</label>
@@ -116,12 +117,15 @@
 <script>
 import { Validator } from "simple-vue-validator";
 import { async } from "q";
+import { constants } from "crypto";
 export default {
   components: {
     name: "createPost"
   },
   data() {
     var end = require("../../../dev.env");
+    let msgImg = "";
+
     return {
       post: {},
       author: {},
@@ -130,7 +134,9 @@ export default {
       file: "",
       title: "",
       msg: "",
+      msg1: "",
       submitted: false,
+      upfile: "",
       staza: end.VUE_APP_BASE_URI
     };
   },
@@ -144,8 +150,17 @@ export default {
       alert("Wait until upload is done!");
       console.log(this.file);
     },
-    createPost() {
+    handleImgUpload() {
+      this.upfile = this.$refs.upfile.files[0];
+      this.$Progress.start();
+      alert("Wait until upload is done!");
+      console.log(this.upfile);
+    },
+    createPost(msgImg) {
       let uri = this.staza + "posts";
+      this.post.img = msgImg;
+      console.log("slikica" + this.post.img);
+      console.log("msg1" + msgImg);
       this.axios.post(uri, this.post).then(response => {
         console.log(response.data);
       });
@@ -161,9 +176,16 @@ export default {
       this.axios.get(uri, this.msg).then(response => {
         this.msg = response.data;
       });
-    setTimeout( () => this.$router.push({ path: '/admin'}), 5000);
-
-
+      setTimeout(() => this.$router.push({ path: "/admin" }), 5000);
+    },
+    sendNotification() {
+      https: this.$notification.show(
+        "Post created",
+        {
+          body: "Your post is successfully created!"
+        },
+        {}
+      );
     },
     handleSubmit(e) {
       var val = document.getElementById("textarea").value;
@@ -173,35 +195,64 @@ export default {
 
       formData.append("title", this.title);
       formData.append("file", this.file);
+
+      formData.append("upfile", this.upfile);
       console.log(formData);
 
-      // Make the request to the POST /single-file URL
-      let uri = this.staza + "uploads";
-      this.axios
-        .post(uri, formData)
-        .then(function() {
-          console.log("SUCCESS!!");
-        })
-        .catch(function() {
-          console.log("FAILURE!!");
-        });
+      if (this.file !== "") {
+        console.log("uslo u yt");
+        // Make the request to the POST /single-file URL
+        let uri = this.staza + "uploads";
+        this.axios
+          .post(uri, formData)
+          .then(function() {
+            console.log("SUCCESS!!");
+          })
+          .catch(function() {
+            console.log("FAILURE!!");
+          });
+      }
+      if (this.upfile !== "") {
+        let uri = this.staza + "images";
+        console.log(uri);
+        this.axios
+          .post(uri, formData)
+          .then(function() {
+            console.log("SUCCESS!!");
+          })
+          .catch(function() {
+            console.log("FAILURE!!");
+          });
+      }
+
       this.submitted = true;
       this.$validator.validate().then(valid => {
         if (!valid) {
           alert("Fill required fields - title and text!");
-        } else {
-          this.sendToYoutube();
-          this.createPost();
-          https: this.$notification.show(
-            "Post created",
-            {
-              body: "Your post is successfully created!"
-            },
-            {}
-          );
-          event.target.reset();
-          this.$router.push("admin");
         }
+
+        if (this.file !== "") {
+          console.log("ima YTTT");
+          this.sendToYoutube();
+        }
+        if (this.upfile !== "") {
+          console.log("MACIIIII");
+          let uri = this.staza + "images";
+          this.axios.get(uri, this.msgImg).then(response => {
+          this.msgImg = JSON.stringify(response.data.message);
+
+          console.log("msg je " + this.msgImg);
+
+          this.createPost(this.msgImg);
+          this.sendNotification();
+          });
+        }
+
+        // this.createPost(this.msgImg);
+        // this.sendNotification();
+
+        event.target.reset();
+        this.$router.push("admin");
       });
     }
   }
