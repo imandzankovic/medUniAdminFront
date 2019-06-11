@@ -144,48 +144,9 @@ export default {
     this.getAuthors();
   },
   methods: {
-    handleFileUpload() {
-      this.file = this.$refs.file.files[0];
-      this.$Progress.start();
-      alert("Wait until upload is done!");
-      console.log(this.file);
-    },
-    handleImgUpload() {
-      this.upfile = this.$refs.upfile.files[0];
-      this.$Progress.start();
-      alert("Wait until upload is done!");
-      console.log(this.upfile);
-    },
-    createPost(msgImg) {
-      let uri = this.staza + "posts";
-      this.post.img = msgImg;
-      console.log("slikica" + this.post.img);
-      console.log("msg1" + msgImg);
-      this.axios.post(uri, this.post).then(response => {
-        console.log(response.data);
-      });
-    },
-    getAuthors() {
-      let uri = this.staza + "authors";
-      this.axios.get(uri, this.post).then(response => {
-        this.authors = response.data;
-      });
-    },
-    sendToYoutube() {
-      let uri = this.staza + "uploads";
-      this.axios.get(uri, this.msg).then(response => {
-        this.msg = response.data;
-      });
-      setTimeout(() => this.$router.push({ path: "/admin" }), 5000);
-    },
-    sendNotification() {
-      https: this.$notification.show(
-        "Post created",
-        {
-          body: "Your post is successfully created!"
-        },
-        {}
-      );
+    parentMethod(valueFromChild) {
+      // Do something with the value
+      console.log("From the child:", valueFromChild);
     },
     handleSubmit(e) {
       var val = document.getElementById("textarea").value;
@@ -232,28 +193,72 @@ export default {
         }
 
         if (this.file !== "") {
-          console.log("ima YTTT");
           this.sendToYoutube();
         }
         if (this.upfile !== "") {
-          console.log("MACIIIII");
           let uri = this.staza + "images";
           this.axios.get(uri, this.msgImg).then(response => {
-          this.msgImg = JSON.stringify(response.data.message);
+            this.msg1 = JSON.stringify(response.data.message);
 
-          console.log("msg je " + this.msgImg);
-
-          this.createPost(this.msgImg);
-          this.sendNotification();
+            console.log("msg je " + this.msg1);
           });
         }
 
-        // this.createPost(this.msgImg);
-        // this.sendNotification();
+        setTimeout(() => {
+          this.createPost(this.msg1,this.msg);
+          console.log(this.msg1);
+          console.log(this.msg);
+          this.sendNotification();
+        }, 2000);
 
         event.target.reset();
         this.$router.push("admin");
       });
+    },
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0];
+      this.$Progress.start();
+      alert("Wait until upload is done!");
+      console.log(this.file);
+    },
+    handleImgUpload() {
+      this.upfile = this.$refs.upfile.files[0];
+      this.$Progress.start();
+      alert("Wait until upload is done!");
+      console.log(this.upfile);
+    },
+    createPost(msgImg,videoTitle) {
+      let uri = this.staza + "posts";
+      this.post.img = msgImg;
+      this.post.video=videoTitle;
+      console.log('videic' + this.post.video)
+      console.log("slikica" + this.post.img);
+      
+      this.axios.post(uri, this.post).then(response => {
+        console.log(response.data);
+      });
+    },
+    getAuthors() {
+      let uri = this.staza + "authors";
+      this.axios.get(uri, this.post).then(response => {
+        this.authors = response.data;
+      });
+    },
+    sendToYoutube() {
+      let uri = this.staza + "uploads";
+      this.axios.get(uri, this.msg).then(response => {
+        this.msg = JSON.stringify(response.data);
+      });
+      setTimeout(() => this.$router.push({ path: "/admin" }), 5000);
+    },
+    sendNotification() {
+      https: this.$notification.show(
+        "Post created",
+        {
+          body: "Your post is successfully created!"
+        },
+        {}
+      );
     }
   }
 };
