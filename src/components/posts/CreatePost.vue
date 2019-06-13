@@ -30,11 +30,11 @@
               >{{ errors.first('title') }}</div>
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label>Img:</label>
-              <!-- <input type="text" class="form-control" v-model="post.img"> -->
+              <input type="text" class="form-control" v-model="post.img">
               <input type="file" name="upfile" ref="upfile" value v-on:change="handleImgUpload()">
-            </div>
+            </div> -->
             <div class="form-group">
               <label>Video:</label>
               <input type="file" name="file" ref="file" value v-on:change="handleFileUpload()">
@@ -193,7 +193,7 @@ export default {
         }
 
         if (this.file !== "") {
-          this.sendToYoutube();
+          this.sendToGoogle();
         }
         if (this.upfile !== "") {
           let uri = this.staza + "images";
@@ -244,10 +244,12 @@ export default {
         this.authors = response.data;
       });
     },
-    sendToYoutube() {
+    sendToGoogle() {
       let uri = this.staza + "uploads";
       this.axios.get(uri, this.msg).then(response => {
-        this.msg = JSON.stringify(response.data);
+        this.msg = response.data.message;
+
+            console.log("msg je " + this.msg);
       });
       setTimeout(() => this.$router.push({ path: "/admin" }), 5000);
     },
