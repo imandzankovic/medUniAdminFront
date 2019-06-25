@@ -17,14 +17,14 @@
               <label>Title:</label>
               <input type="text" class="form-control" v-model="post.title">
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label>Img:</label>
               <input type="text" class="form-control" v-model="post.img">
-            </div>
-            <div class="form-group">
+            </div> -->
+            <!-- <div class="form-group">
               <label>Video:</label>
               <input type="text" class="form-control" v-model="post.video">
-            </div>
+            </div> -->
             <div class="form-group">
               <textarea
                 class="form-control"

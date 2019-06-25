@@ -23,7 +23,7 @@
               <i class="fa fa-list-alt fa fa-mortar-board icon"></i>
               <h3 class="name">Manage Authors</h3>
               <p class="description">Click to manage authors</p>
-              <a class="learn-more" href="#">Learn more »</a>
+              <router-link :to="{name: 'authors'}">Manage Authors</router-link>
             </div>
           </div>
           <div class="col-sm-6 col-md-5 col-lg-4 item">
