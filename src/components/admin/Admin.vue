@@ -30,8 +30,8 @@
             <div class="box">
               <i class="fa fa-phone icon"></i>
               <h3 class="name">Contacts</h3>
-              <p class="description">See who contacted you</p>
-              <a class="learn-more" href="#">Learn more »</a>
+              <p class="description">See who contacted you?</p>
+                <router-link :to="{name: 'contacts'}">See who contacted you</router-link>
             </div>
           </div>
           <div class="col-sm-6 col-md-5 col-lg-4 item">
