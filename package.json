@@ -12,7 +12,7 @@
     "@syncfusion/ej2-vue-inputs": "^17.1.49",
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "query": "^0.2.0",
     "simple-vue-validator": "^0.16.0",
     "ts-loader": "^6.0.2",
