@@ -21,7 +21,7 @@
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
     "vue-dropdowns": "^1.0.6",
-    "vue-moment": "^4.0.0",
+    "vue-moment": "^4.1.0",
     "vue-native-notification": "^1.0.5",
     "vue-progressbar": "^0.7.5",
     "vue-router": "^3.0.6",
